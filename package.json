@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/vorotyna/tinyapp/issues"
   },
-  "homepage": "https://github.com/vorotyna/tinyapp#readme"
+  "homepage": "https://github.com/vorotyna/tinyapp#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }
