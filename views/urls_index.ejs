@@ -18,7 +18,7 @@
   </head>
   <body>
     <%- include('partials/_header') %>
-    <main style="margin: 1em;">
+    <main style="margin: 1em">
       <h3>My URLs</h3>
       <table class="table">
         <thead>
@@ -29,10 +29,18 @@
         </thead>
         <tbody>
           <% for (let id in urls) { %>
-            <tr>
-              <td><%= id %></td>
-              <td><%= urls[id] %></td>
-            </tr>
+          <tr>
+            <td><%= id %></td>
+            <td><%= urls[id] %></td>
+            <td>
+              <form method="POST" action="/urls/<%= id%>/delete">
+                <!-- https://www.w3schools.com/bootstrap4/bootstrap_buttons.asp -->
+                <button type="submit" class="btn btn-outline-danger">
+                  Delete
+                </button>
+              </form>
+            </td>
+          </tr>
           <% } %>
         </tbody>
       </table>
