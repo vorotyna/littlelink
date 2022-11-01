@@ -5,6 +5,13 @@ const PORT = 8080; // default port 8080
 app.set("view engine", "ejs"); // tells the Express app to use EJS as its templating engine
 app.use(express.urlencoded({ extended: true }));
 
+function generateRandomString() {
+  let shortString = ""
+  // https://www.programiz.com/javascript/examples/generate-random-strings 
+  shortString = Math.random().toString(36).substring(2,8); 
+  return shortString
+}
+
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
