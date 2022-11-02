@@ -34,12 +34,6 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
-app.post("/urls", (req, res) => {
-  console.log(req.body); // Log the POST request body to the console
-  const shortString = generateRandomString();
-  urlDatabase[shortString] = req.body.longURL;
-  res.redirect(`/urls/${shortString}`); // Respond with "Ok" (we will replace this)
-});
 
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
@@ -58,10 +52,25 @@ app.get("/u/:id", (req, res) => {
   res.redirect(longUrl);
 });
 
+app.post("/urls", (req, res) => {
+  console.log(req.body); // Log the POST request body to the console
+  const shortString = generateRandomString();
+  urlDatabase[shortString] = req.body.longURL;
+  res.redirect(`/urls/${shortString}`); // Respond with "Ok" (we will replace this)
+});
+
 // Post request to delete an existing URL
 app.post("/urls/:id/delete", (req, res) => {
   const id = req.params.id;
   delete urlDatabase[id];
+  res.redirect("/urls");
+});
+
+// Post request to edit a URL
+app.post("/urls/:id", (req, res) => {
+  const id = req.params.id;
+  const longURL = req.body.longURL;
+  urlDatabase[id] = longURL;
   res.redirect("/urls");
 });
 
