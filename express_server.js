@@ -130,7 +130,6 @@ app.get("/u/:id", (req, res) => {
 
 /********* POSTS ************/
 app.post("/urls", (req, res) => {
-  console.log(req.body);
   const shortString = generateRandomString();
   if (req.session.user_id in users) {
     urlDatabase[shortString] = { longURL: req.body.longURL, userId: req.session.user_id };
