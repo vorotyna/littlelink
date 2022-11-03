@@ -1,7 +1,6 @@
 const express = require("express");
-const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session');
 const bcrypt = require("bcryptjs");
-const e = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 
@@ -9,7 +8,9 @@ app.set("view engine", "ejs"); // tells the Express app to use EJS as its templa
 
 // MIDDLEWARE
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+app.use(cookieSession({ name: 'session', keys: 'lisopiso' }));
+
+
 
 function generateRandomString() {
   let shortString = "";
@@ -21,15 +22,6 @@ function generateRandomString() {
 function emailExists(users, email) {
   for (let user in users) {
     if (email === users[user].email) {
-      return true;
-    }
-  }
-  return null;
-}
-
-function passwordExists(users, password) {
-  for (let user in users) {
-    if (password === users[user].password) {
       return true;
     }
   }
