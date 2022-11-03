@@ -70,6 +70,13 @@ app.get("/register", (req, res) => {
   res.render("urls_registration", templateVars);
 });
 
+app.get("/login", (req, res) => {
+  const templateVars = {
+    user: users[req.cookies.user_id]
+  };
+  res.render("urls_login", templateVars);
+});
+
 app.get("/urls/new", (req, res) => {
   const templateVars = {
     user: users[req.cookies.user_id]
@@ -152,4 +159,3 @@ app.post("/register", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
-
