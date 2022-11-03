@@ -137,8 +137,8 @@ app.post("/login", (req, res) => {
   if (!emailExists(users, req.body.email) || !passwordExists(users, req.body.password)) {
     return res.status(403).send('E-mail or password cannot be found!');
   } else {
-    randomId = Object.keys(users).find(key => users[key].email === req.body.email);
-    res.cookie('user_id', randomId);
+    userRandomId = Object.keys(users).find(key => users[key].email === req.body.email);
+    res.cookie('user_id', userRandomId);
     res.redirect("/urls");
   }
 });
@@ -146,7 +146,7 @@ app.post("/login", (req, res) => {
 // Post request the logout route
 app.post("/logout", (req, res) => {
   res.clearCookie('user_id');
-  res.redirect("/urls");
+  res.redirect("/login");
 });
 
 // Post request the registration route
