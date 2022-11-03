@@ -73,17 +73,25 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-  const templateVars = {
-    user: users[req.cookies.user_id]
-  };
-  res.render("urls_registration", templateVars);
+  if (req.cookies.user_id in users) {
+    res.redirect('/urls');
+  } else {
+    const templateVars = {
+      user: undefined
+    };
+    res.render("urls_registration", templateVars);
+  }
 });
 
 app.get("/login", (req, res) => {
-  const templateVars = {
-    user: users[req.cookies.user_id]
-  };
-  res.render("urls_login", templateVars);
+  if (req.cookies.user_id in users) {
+    res.redirect('/urls');
+  } else {
+    const templateVars = {
+      user: undefined
+    };
+    res.render("urls_login", templateVars);
+  }
 });
 
 app.get("/urls/new", (req, res) => {
