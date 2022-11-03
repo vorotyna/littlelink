@@ -25,6 +25,15 @@ function emailExists(users, email) {
   return null;
 }
 
+function passwordExists(users, password) {
+  for (let user in users) {
+    if (password === users[user].password) {
+      return true;
+    }
+  }
+  return null;
+}
+
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
@@ -125,9 +134,13 @@ app.post("/urls/:id", (req, res) => {
 
 // Post request the login route
 app.post("/login", (req, res) => {
-  username = req.body.username;
-  res.cookie('username', username);
-  res.redirect("/urls");
+  if (!emailExists(users, req.body.email) || !passwordExists(users, req.body.password)) {
+    return res.status(403).send('E-mail or password cannot be found!');
+  } else {
+    randomId = Object.keys(users).find(key => users[key].email === req.body.email);
+    res.cookie('user_id', randomId);
+    res.redirect("/urls");
+  }
 });
 
 // Post request the logout route
