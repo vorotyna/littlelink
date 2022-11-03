@@ -5,16 +5,17 @@ const bcrypt = require("bcryptjs");
 const PORT = 8080;
 const { emailExists, generateRandomString } = require("./helpers");
 
-// Setting EJS as view engine
+// Setting EJS as view engine //
 app.set("view engine", "ejs");
 
-/****** MIDDLEWARE ******/
+/********* MIDDLEWARE *********/
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieSession({
   name: 'session',
   keys: ['lisopiso']
 }));
 
+/********* DATABASES *********/
 const urlDatabase = {
   b6UTxQ: {
     longURL: "https://www.tsn.ca",
@@ -39,16 +40,13 @@ const users = {
   },
 };
 
+/********* GETS ************/
 app.get("/", (req, res) => {
-  res.send("Hello!");
-});
-
-app.get("/urls.json", (req, res) => {
-  res.json(urlDatabase);
-});
-
-app.get("/hello", (req, res) => {
-  res.send("<html><body>Hello <b>World</b></body></html>\n");
+  if (!req.session.user_id) {
+    res.redirect("/login");
+  } else {
+    res.redirect("/urls");
+  }
 });
 
 app.get("/urls", (req, res) => {
@@ -122,11 +120,15 @@ app.get("/urls/:id", (req, res) => {
 });
 
 app.get("/u/:id", (req, res) => {
-  id = req.params.id;
-  longUrl = urlDatabase[id].longURL;
-  res.redirect(longUrl);
+  if (!urlDatabase[req.params.id]) {
+    return res.status(404).send("Long URL is an incomplete link!");
+  }
+  const longURL = urlDatabase[req.params.id].longURL;
+  return res.redirect(longURL);
 });
 
+
+/********* POSTS ************/
 app.post("/urls", (req, res) => {
   console.log(req.body);
   const shortString = generateRandomString();
@@ -138,7 +140,6 @@ app.post("/urls", (req, res) => {
   }
 });
 
-// Post request to delete an existing URL
 app.post("/urls/:id/delete", (req, res) => {
   const id = req.params.id;
   if (id in urlDatabase) {
@@ -161,8 +162,6 @@ app.post("/urls/:id/delete", (req, res) => {
   }
 });
 
-
-// Post request to edit a URL
 app.post("/urls/:id", (req, res) => {
   const id = req.params.id;
   if (id in urlDatabase) {
@@ -184,7 +183,6 @@ app.post("/urls/:id", (req, res) => {
   }
 });
 
-// Post request the login route
 app.post("/login", (req, res) => {
   userRandomId = Object.keys(users).find(key => users[key].email === req.body.email);
   if (req.body.email === '' || req.body.password === '') {
@@ -197,13 +195,11 @@ app.post("/login", (req, res) => {
   }
 });
 
-// Post request the logout route
 app.post("/logout", (req, res) => {
   req.session = null;;
   res.redirect("/login");
 });
 
-// Post request the registration route
 app.post("/register", (req, res) => {
   let userRandomID = generateRandomString();
   if (req.body.email === '' || req.body.password === '') {
@@ -222,6 +218,7 @@ app.post("/register", (req, res) => {
   return res.redirect("/urls");
 });
 
+/********* LISTEN ************/
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
