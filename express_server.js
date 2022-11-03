@@ -1,33 +1,19 @@
 const express = require("express");
+const app = express();
 const cookieSession = require('cookie-session');
 const bcrypt = require("bcryptjs");
-const app = express();
-const PORT = 8080; // default port 8080
+const PORT = 8080;
+const { emailExists, generateRandomString } = require("./helpers");
 
-app.set("view engine", "ejs"); // tells the Express app to use EJS as its templating engine
+// Setting EJS as view engine
+app.set("view engine", "ejs");
 
-// MIDDLEWARE
+/****** MIDDLEWARE ******/
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieSession({
   name: 'session',
   keys: ['lisopiso']
 }));
-
-function generateRandomString() {
-  let shortString = "";
-  // https://www.programiz.com/javascript/examples/generate-random-strings 
-  shortString = Math.random().toString(36).substring(2, 8);
-  return shortString;
-}
-
-function emailExists(users, email) {
-  for (let user in users) {
-    if (email === users[user].email) {
-      return true;
-    }
-  }
-  return null;
-}
 
 const urlDatabase = {
   b6UTxQ: {
