@@ -4,6 +4,8 @@ const app = express();
 const PORT = 8080; // default port 8080
 
 app.set("view engine", "ejs"); // tells the Express app to use EJS as its templating engine
+
+// MIDDLEWARE
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
@@ -14,9 +16,31 @@ function generateRandomString() {
   return shortString;
 }
 
+function emailExists(users, email) {
+  for (let user in users) {
+    if (email === users[user].email) {
+      return true;
+    }
+  }
+  return null;
+}
+
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
+};
+
+const users = {
+  userRandomID: {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur",
+  },
+  user2RandomID: {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk",
+  },
 };
 
 app.get("/", (req, res) => {
@@ -34,15 +58,21 @@ app.get("/hello", (req, res) => {
 app.get("/urls", (req, res) => {
   const templateVars = {
     urls: urlDatabase,
-    username: req.cookies["username"]
+    user: users[req.cookies.user_id]
   };
   res.render("urls_index", templateVars);
 });
 
+app.get("/register", (req, res) => {
+  const templateVars = {
+    user: users[req.cookies.user_id]
+  };
+  res.render("urls_registration", templateVars);
+});
 
 app.get("/urls/new", (req, res) => {
   const templateVars = {
-    username: req.cookies["username"]
+    user: users[req.cookies.user_id]
   };
   res.render("urls_new", templateVars);
 });
@@ -53,7 +83,7 @@ app.get("/urls/:id", (req, res) => {
   const templateVars = {
     id: id,
     longURL: longUrl,
-    username: req.cookies["username"]
+    user: users[req.cookies.user_id]
   };
   res.render("urls_show", templateVars);
 });
@@ -95,8 +125,28 @@ app.post("/login", (req, res) => {
 
 // Post request the logout route
 app.post("/logout", (req, res) => {
-  res.clearCookie('username');
+  res.clearCookie('user_id');
   res.redirect("/urls");
+});
+
+// Post request the registration route
+app.post("/register", (req, res) => {
+  let userRandomID = generateRandomString();
+  if (req.body.email === '' || req.body.password === '') {
+    return res.status(400).send('Empty email or password!');
+  }
+  else if (emailExists(users, req.body.email)) {
+    return res.status(400).send('Email already exists!');
+  }
+  users[userRandomID] = {
+    id: userRandomID,
+    email: req.body.email,
+    password: req.body.password
+  };
+  res.cookie('user_id', userRandomID);
+  console.log(users);
+  res.redirect("/urls");
+
 });
 
 app.listen(PORT, () => {

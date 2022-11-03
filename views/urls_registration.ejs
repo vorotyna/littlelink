@@ -1,12 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-
     <!-- Bootstrap CSS -->
     <link
       rel="stylesheet"
@@ -14,46 +8,39 @@
       integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
       crossorigin="anonymous"
     />
-    <title>TinyApp</title>
+    <title>Account Registration - TinyApp</title>
   </head>
+
   <body>
     <%- include('partials/_header') %>
+
     <main style="margin: 1em">
-      <h3>My URLs</h3>
-      <table class="table">
-        <thead>
+      <h3>Create Account</h3>
+      <form method="POST" action="/register">
+        <table cellpadding="5">
           <tr>
-            <th scope="col">Short URL ID</th>
-            <th scope="col">Long URL</th>
-            <th scope="col">Edit</th>
-            <th scope="col">Delete</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% for (let id in urls) { %>
-          <tr>
-            <td><%= id %></td>
-            <td><%= urls[id] %></td>
+            <td>Email:</td>
             <td>
-              <a href="/urls/<%= id%>">
-                <button type="submit" class="btn btn-outline-primary">
-                  Edit
-                </button>
-              </form>
-            </td>
-            <td>
-              <form method="POST" action="/urls/<%= id%>/delete">
-                <!-- https://www.w3schools.com/bootstrap4/bootstrap_buttons.asp -->
-                <button type="submit" class="btn btn-outline-danger">
-                  Delete
-                </button>
-              </form>
+              <input
+                type="email"
+                name="email"
+                placeholder="example@gmail.com"
+              />
             </td>
           </tr>
-          <% } %>
-        </tbody>
-      </table>
+          <tr>
+            <td>Password:</td>
+            <td>
+              <input type="password" name="password" placeholder="Password" />
+            </td>
+          </tr>
+          <tr>
+            <td><button class="btn btn-primary">Create</button></td>
+          </tr>
+        </table>
+      </form>
     </main>
+
     <!-- Bootstrap JS -->
     <script
       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
