@@ -4,7 +4,7 @@ TinyApp is a full stack web application built with Node and Express that allows 
 
 ## Final Product
 
-!["My URLS Index"](https://github.com/vorotyna/tinyapp/blob/main/docs/urls_index.png?raw=true)
+!["My URLS Index"](https://github.com/vorotyna/tinyapp/blob/main/docs/urls_index.png?raw=true ""My URLS Index")
 !["Create a new URL"](https://github.com/vorotyna/tinyapp/blob/main/docs/urls_new.png?raw=true)
 !["Edit an existing URL"](https://github.com/vorotyna/tinyapp/blob/main/docs/urls_show.png?raw=true)
 
