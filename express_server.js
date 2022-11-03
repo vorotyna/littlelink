@@ -95,21 +95,30 @@ app.get("/login", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  const templateVars = {
-    user: users[req.cookies.user_id]
-  };
-  res.render("urls_new", templateVars);
+  if (req.cookies.user_id in users) {
+    const templateVars = {
+      user: users[req.cookies.user_id]
+    };
+    res.render("urls_new", templateVars);
+  } else {
+    res.redirect('/login');
+  }
 });
+
 
 app.get("/urls/:id", (req, res) => {
   id = req.params.id;
-  longUrl = urlDatabase[id];
-  const templateVars = {
-    id: id,
-    longURL: longUrl,
-    user: users[req.cookies.user_id]
-  };
-  res.render("urls_show", templateVars);
+  if (!(id in urlDatabase)) {
+    return res.status(404).send('Short URL not found!');
+  } else {
+    longUrl = urlDatabase[id];
+    const templateVars = {
+      id: id,
+      longURL: longUrl,
+      user: users[req.cookies.user_id]
+    };
+    res.render("urls_show", templateVars);
+  }
 });
 
 app.get("/u/:id", (req, res) => {
@@ -122,7 +131,11 @@ app.post("/urls", (req, res) => {
   console.log(req.body); // Log the POST request body to the console
   const shortString = generateRandomString();
   urlDatabase[shortString] = req.body.longURL;
-  res.redirect(`/urls/${shortString}`); // Respond with "Ok" (we will replace this)
+  if (req.cookies.user_id in users) {
+    res.redirect(`/urls/${shortString}`); // Respond with "Ok" (we will replace this)
+  } else {
+    return res.status(400).send('Please login first!');
+  }
 });
 
 // Post request to delete an existing URL
