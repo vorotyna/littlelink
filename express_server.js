@@ -1,5 +1,6 @@
 const express = require("express");
 const cookieParser = require('cookie-parser');
+const e = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 
@@ -35,8 +36,14 @@ function passwordExists(users, password) {
 }
 
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  b6UTxQ: {
+    longURL: "https://www.tsn.ca",
+    userID: "aJ48lW",
+  },
+  i3BoGr: {
+    longURL: "https://www.google.ca",
+    userID: "aJ48lW",
+  },
 };
 
 const users = {
@@ -65,11 +72,16 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  const templateVars = {
-    urls: urlDatabase,
-    user: users[req.cookies.user_id]
-  };
-  res.render("urls_index", templateVars);
+  if (!(req.cookies.user_id in users)) {
+    res.redirect('/login');
+  } else {
+    let urls = Object.entries(urlDatabase).filter(([key, value]) => value.userId === req.cookies.user_id);
+    const templateVars = {
+      urls: Object.fromEntries(urls),
+      user: users[req.cookies.user_id]
+    };
+    res.render("urls_index", templateVars);
+  }
 });
 
 app.get("/register", (req, res) => {
@@ -110,28 +122,37 @@ app.get("/urls/:id", (req, res) => {
   id = req.params.id;
   if (!(id in urlDatabase)) {
     return res.status(404).send('Short URL not found!');
+  } else if (req.cookies.user_id in users) {
+    const userUrls = Object.entries(urlDatabase).filter(([key, value]) => value.userId === req.cookies.user_id);
+    const userUrlsObject = Object.fromEntries(userUrls);
+    if (id in userUrlsObject) {
+      longUrl = urlDatabase[id].longURL;
+      const templateVars = {
+        id: id,
+        longURL: longUrl,
+        user: users[req.cookies.user_id]
+      };
+      res.render("urls_show", templateVars);
+    } else {
+      return res.status(401).send('This URL does not belong to you!');
+    }
   } else {
-    longUrl = urlDatabase[id];
-    const templateVars = {
-      id: id,
-      longURL: longUrl,
-      user: users[req.cookies.user_id]
-    };
-    res.render("urls_show", templateVars);
+    return res.status(401).send('Must login!');
   }
 });
 
 app.get("/u/:id", (req, res) => {
   id = req.params.id;
-  longUrl = urlDatabase[id];
+  longUrl = urlDatabase[id].longURL;
   res.redirect(longUrl);
 });
 
 app.post("/urls", (req, res) => {
   console.log(req.body); // Log the POST request body to the console
   const shortString = generateRandomString();
-  urlDatabase[shortString] = req.body.longURL;
   if (req.cookies.user_id in users) {
+    urlDatabase[shortString] = { longURL: req.body.longURL, userId: req.cookies.user_id };
+    console.log(urlDatabase);
     res.redirect(`/urls/${shortString}`); // Respond with "Ok" (we will replace this)
   } else {
     return res.status(400).send('Please login first!');
@@ -141,16 +162,47 @@ app.post("/urls", (req, res) => {
 // Post request to delete an existing URL
 app.post("/urls/:id/delete", (req, res) => {
   const id = req.params.id;
-  delete urlDatabase[id];
-  res.redirect("/urls");
+  if (id in urlDatabase) {
+    if (req.cookies.user_id in users) {
+      const userUrls = Object.entries(urlDatabase).filter(([key, value]) => value.userId === req.cookies.user_id);
+      const userUrlsObject = Object.fromEntries(userUrls);
+      if (id in userUrlsObject) {
+        const longURL = req.body.longURL;
+        urlDatabase[id].longURL = longURL;
+        delete urlDatabase[id];
+        res.redirect("/urls");
+      } else {
+        return res.status(401).send('This does not belong to you!');
+      }
+    } else {
+      return res.status(401).send('Please log in!!');
+    }
+  } else {
+    return res.status(404).send('Id not found!!!!');
+  }
 });
+
 
 // Post request to edit a URL
 app.post("/urls/:id", (req, res) => {
   const id = req.params.id;
-  const longURL = req.body.longURL;
-  urlDatabase[id] = longURL;
-  res.redirect("/urls");
+  if (id in urlDatabase) {
+    if (req.cookies.user_id in users) {
+      const userUrls = Object.entries(urlDatabase).filter(([key, value]) => value.userId === req.cookies.user_id);
+      const userUrlsObject = Object.fromEntries(userUrls);
+      if (id in userUrlsObject) {
+        const longURL = req.body.longURL;
+        urlDatabase[id].longURL = longURL;
+        res.redirect("/urls");
+      } else {
+        return res.status(401).send('This does not belong to you!');
+      }
+    } else {
+      return res.status(401).send('Please log in!!');
+    }
+  } else {
+    return res.status(404).send('Id not found!!!!');
+  }
 });
 
 // Post request the login route
