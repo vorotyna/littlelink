@@ -4,9 +4,9 @@ LittleLink is a full stack web application built with Node and Express that allo
 
 ## Final Product
 
-### My URLS Index
+### My URLs Index
 
-!["My URLS Index"](https://github.com/vorotyna/littlelink/blob/main/docs/urls_show.png?raw=true)
+!["My URLs Index"](https://github.com/vorotyna/littlelink/blob/main/docs/urls_show.png?raw=true)
 
 ### Create a new URL
 
