@@ -1,5 +1,5 @@
 {
-  "name": "tinyapp",
+  "name": "littlelink",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,15 +9,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vorotyna/tinyapp.git"
+    "url": "git+https://github.com/vorotyna/littlelink.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/vorotyna/tinyapp/issues"
+    "url": "https://github.com/vorotyna/littlelink/issues"
   },
-  "homepage": "https://github.com/vorotyna/tinyapp#readme",
+  "homepage": "https://github.com/vorotyna/littlelink#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cookie-session": "^2.0.0",
