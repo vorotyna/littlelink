@@ -6,15 +6,15 @@ LittleLink is a full stack web application built with Node and Express that allo
 
 ### My URLS Index
 
-!["My URLS Index"](https://github.com/vorotyna/tinyapp/blob/main/docs/urls_index.png?raw=true)
+!["My URLS Index"](https://github.com/vorotyna/littlelink/blob/main/docs/urls_show.png?raw=true)
 
 ### Create a new URL
 
-!["Create a new URL"](https://github.com/vorotyna/tinyapp/blob/main/docs/urls_new.png?raw=true)
+!["Create a new URL"](https://github.com/vorotyna/littlelink/blob/main/docs/urls_new.png?raw=true)
 
 ### Edit an existing URL
 
-!["Edit an existing URL"](https://github.com/vorotyna/tinyapp/blob/main/docs/urls_show.png?raw=true)
+!["Edit an existing URL"](https://github.com/vorotyna/littlelink/blob/main/docs/urls_index.png?raw=true)
 
 ## Dependencies
 
